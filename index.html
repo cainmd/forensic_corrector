@@ -23,11 +23,20 @@
 <form role = "form">			
 				<h2>Select items to review below: </h2>	
 					<div class="form-group">
+						
 						<div class="checkbox">
-						  <label><input type="checkbox" value="GSW">Gunshot Wound</label>
+							<label><input type="checkbox" id = "GSW" value="GSW">Gunshot Wound</label>
+						</div>
+						<div class="row" id="GSW_div" style="display:none">
+							<div class="col-md-2">
+								<input class="form-control" placeholder = "Entry Wounds" id="GSW_entries" type="text" >
+							</div>
 						</div>
 						<div class="checkbox">
 						  <label><input type="checkbox" value="OD">Overdose</label>
+						</div>
+						<div class="checkbox">
+						  <label><input type="checkbox" value="STR">Strangulation</label>
 						</div>
 					</div>
 										
@@ -54,11 +63,9 @@
 
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-
 <script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-
-
+<script type="text/javascript" src="js/GSW.js"></script>
+<script type="text/javascript" src="js/strangulation.js"></script>
 
  <div id = "footer">
 
