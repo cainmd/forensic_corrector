@@ -32,10 +32,13 @@ var $gender_append;
 
 
 $(document).ready(function () {
-     
+		$("#GSW").click(function(){
+			$("#GSW_div").toggle();
+		});
 	 $("#submit").click(function(){
 		//countChecked();
 		reset_messages();
+		var GSW_entries =  document.getElementById("GSW_entries").value;
 		var checkedValues = $('input:checkbox:checked').map(function() {
 			return this.value;
 		}).get();
@@ -49,7 +52,13 @@ $(document).ready(function () {
 		for (i = 0; i < checkedValues.length; i++){
 			switch (checkedValues[i]) {
 				case "GSW":
-					gun_check(report_text);
+					gun_check(report_text, GSW_entries);
+				break;
+				case "OD":
+					OD_check(report_text);
+				break;
+				case "STR":
+					strangulation_check(report_text);
 				break;
 			}
 		}
@@ -161,20 +170,3 @@ var interpret_report = function (report) {
 	mod = extracted_value.replace(/\s+/g, '');
 	
 }  
-var gun_check = function(report){
-	var start = 0;
-	var temp = report.toUpperCase();
-	var gsw_message = "You are missing the following descriptions:";
-	
-	var stippling = temp.indexOf("stippling");
-	var soot = temp.indexOf("stippling");
-	
-	if (soot <= 0){
-			gsw_message = gsw_message + "<br/>\n\u2022 soot"; 
-	}
-	if (stippling <=0){
-			gsw_message = gsw_message + "<br/>\n\u2022 stippling";
-	}	
-	$gun_append = $("p").append("<b>" + gsw_message + "</b><br/>");
-	
-}
