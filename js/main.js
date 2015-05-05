@@ -18,7 +18,7 @@ var $ = window.jQuery;
 
 //var submit = document.getElementById("submit");
 
-var organ_error = "The following organs are missing:";
+var organ_error = "";
 var gender_error = "";
 var death_error = "";
 var age;
@@ -48,6 +48,7 @@ $(document).ready(function () {
 	
 		 interpret_report(report_text);
 		 organ_search(report_text);
+		 
          //alert (sex);
 		for (i = 0; i < checkedValues.length; i++){
 			switch (checkedValues[i]) {
@@ -66,7 +67,16 @@ $(document).ready(function () {
 });
 
 var reset_messages = function () {
-	$('p').html('');
+	//$('#results').html('');
+	//$('#results').empty();
+	organ_append = "";
+	organ_error = "The following organs are missing:";
+	$('p').remove();
+	$('#results').append('<p></p>');
+	
+	//$('p').html('');
+	//$organ_append = "";
+	//$gender_append = "";
 }
 
 
@@ -75,7 +85,7 @@ var organ_search = function (report) {
 	var temp = report.toUpperCase();
 	//need liver and pancreas already show up in heading
 	var headings = ["Cardiovascular System", "Respiratory System", "Liver and Pancreas", "Lymphoid System", "Endocrine System", "Gastrointestinal Tract", "Genitourinary System", "Musculoskeletal System", "Neck Organs", "Head and Central Nervous System"];
-	var organs = ["Heart", "Lung", "Liver", "Spleen", "Stomach", "Pancreas", "Thyroid", "Kidney", "Bladder", "Ovary", "Ovaries", "Uterus", "Prostate", "Brain"];
+	var organs = ["Heart", "Lung", "Liver", "Spleen", "Stomach", "Pancreas", "Thyroid", "Kidney", "Bladder", "Prostate", "Brain", "Ovary", "Uterus"];
 	
 	var current_organ = "";
 	var start = 0;
@@ -83,7 +93,8 @@ var organ_search = function (report) {
 	var organ_site = "";
 	
 	var counter = 0;
-	
+	var female_parts = 0;
+		
 		for (i = 0; i < organs.length; i++){
 			counter = 0;
 			for (j = 0; j < headings.length; j++){		
@@ -95,31 +106,46 @@ var organ_search = function (report) {
 				current_organ = current_organ.toUpperCase();
 				
 				start = temp.indexOf(current_heading);
+				
 				temp_string = temp.substr(start + current_heading.length);
 				organ_site = temp_string.indexOf(current_organ);
+				if (current_organ == "OVARY"){
+					if (organ_site <=0){
+						temp_string = temp.substr(start + current_heading.length);
+						organ_site = temp_string.indexOf("OVARIES");
+					}
+					
+				}
+				
 				
 				if (organ_site <= 0){
 					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS"){
+						//if it didn't find the organ and they are male, this is okay.
 						if (sex == "Male"){
 								counter++;
 						}
 						
 					}
 					else if (current_organ == "PROSTATE"){
-						if (sex == "female"){
+						if (sex == "Female"){
 								counter++;
 						}
 					}
 					
 				}
 				
+				//fix this if ovaries vs ovary ---
 				if (organ_site > 0) {
 					counter++;
 					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS"){
-						if (sex = "Male"){
+						if (sex == "Male"){
 							//gender id
 							gender_error = "This man grew a pair...of ovaries!";
 						}
+						else {
+							female_parts = 1;
+						}
+						
 					}
 					else if (current_organ == "PROSTATE"){
 						if (sex == "Female"){
@@ -129,13 +155,14 @@ var organ_search = function (report) {
 					}	
 				}
 			}
+			//was <=
 				if (counter <= 0) {
 						organ_error = organ_error + "<br/>\n\u2022" + organs[i];
 					}
 		}	
 	$organ_append = $("p").append("<b>" + organ_error + "</b><br/>");
 	$gender_append = $("p").append("<b>" + gender_error + "</b><br/>");
-	
+	check_demographics(report, sex, race);
 }
 
 var interpret_report = function (report) {
@@ -148,10 +175,13 @@ var interpret_report = function (report) {
 	//at start
 	extracted_value = report.substr(start + 5, 3);	
 	age = extracted_value.replace(/\s+/g, '');
-	
+	age = age.match(/\d+/)[0];
 	start = report.indexOf("SEX");
+		end_pt = report.indexOf("HEIGHT");
 	//at start
-	extracted_value = report.substr(start + 5, 6);	
+	diff = end_pt - start;
+	extracted_value = report.substr(start + 5, diff - 5);
+	
 	sex = extracted_value.replace(/\s+/g, '');
 	
 	start = report.indexOf("RACE");
@@ -169,4 +199,162 @@ var interpret_report = function (report) {
 	extracted_value = report.substr(start + 17, 5);	
 	mod = extracted_value.replace(/\s+/g, '');
 	
+	//alert (sex);
+	//alert (age);
+//	alert (race);
 }  
+
+var check_demographics = function (report, sex, race) {
+	
+	var gender_consistency = "";
+	var race_consistency = "";
+	var extracted_value = "";
+	var age_consistency = "";
+	var temp_report = report.toUpperCase();
+	
+	
+	
+	if (sex == "Male"){
+		
+			var ck_sex = temp_report.indexOf("FEMALE");
+			
+			if (ck_sex > 0){
+				gender_consistency = "Check gender consistency";
+				//$("#report").val(function(start, text){
+					//return text + "World";
+			}
+		
+		switch (race) {		
+		case "White":
+			
+			var r1 = temp_report.indexOf("BLACK MALE");
+			var r2 = temp_report.indexOf("ASIAN MALE");
+			var r3 = temp_report.indexOf("HISPANIC MALE");
+			var r4 = temp_report.indexOf("BLACK FEMALE");
+			var r5 = temp_report.indexOf("ASIAN FEMALE");
+			var r6 = temp_report.indexOf("HISPANIC FEMALE");	
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+		case "Asian":
+			var r1 = temp_report.indexOf("BLACK MALE");
+			var r2 = temp_report.indexOf("WHITE MALE");
+			var r3 = temp_report.indexOf("HISPANIC MALE");
+			var r4 = temp_report.indexOf("BLACK FEMALE");
+			var r5 = temp_report.indexOf("WHITE FEMALE");
+			var r6 = temp_report.indexOf("HISPANIC FEMALE");
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+		case "Black":
+			var r1 = temp_report.indexOf("WHITE MALE");
+			var r2 = temp_report.indexOf("ASIAN MALE");
+			var r3 = temp_report.indexOf("HISPANIC MALE");
+			var r4 = temp_report.indexOf("WHITE FEMALE");
+			var r5 = temp_report.indexOf("ASIAN FEMALE");
+			var r6 = temp_report.indexOf("HISPANIC FEMALE");
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+		case "Hispanic":
+			var r1 = temp_report.indexOf("BLACK MALE");
+			var r2 = temp_report.indexOf("ASIAN MALE");
+			var r3 = temp_report.indexOf("WHITE MALE");
+			var r4 = temp_report.indexOf("BLACK FEMALE");
+			var r5 = temp_report.indexOf("ASIAN FEMALE");
+			var r6 = temp_report.indexOf("WHITE FEMALE");	
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+	}	
+			
+			
+	}
+	else {
+		var ck_sex = report.indexOf("MALE");
+			if (ck_sex > 0){
+				gender_consistency = "Check gender consistency";
+			}
+	switch (race) {		
+		case "White":
+			
+			var r1 = temp_report.indexOf("BLACK MALE");
+			var r2 = temp_report.indexOf("ASIAN MALE");
+			var r3 = temp_report.indexOf("HISPANIC MALE");
+			var r4 = temp_report.indexOf("BLACK FEMALE");
+			var r5 = temp_report.indexOf("ASIAN FEMALE");
+			var r6 = temp_report.indexOf("HISPANIC FEMALE");	
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+			
+		case "Asian":
+			var r1 = temp_report.indexOf("BLACK MALE");
+			var r2 = temp_report.indexOf("WHITE MALE");
+			var r3 = temp_report.indexOf("HISPANIC MALE");
+			var r4 = temp_report.indexOf("BLACK FEMALE");
+			var r5 = temp_report.indexOf("WHITE FEMALE");
+			var r6 = temp_report.indexOf("HISPANIC FEMALE");
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+			
+		case "Black":
+			var r1 = temp_report.indexOf("WHITE MALE");
+			var r2 = temp_report.indexOf("ASIAN MALE");
+			var r3 = temp_report.indexOf("HISPANIC MALE");
+			var r4 = temp_report.indexOf("WHITE FEMALE");
+			var r5 = temp_report.indexOf("ASIAN FEMALE");
+			var r6 = temp_report.indexOf("HISPANIC FEMALE");
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+		case "Hispanic":
+			var r1 = temp_report.indexOf("BLACK MALE");
+			var r2 = temp_report.indexOf("ASIAN MALE");
+			var r3 = temp_report.indexOf("WHITE MALE");
+			var r4 = temp_report.indexOf("BLACK FEMALE");
+			var r5 = temp_report.indexOf("ASIAN FEMALE");
+			var r6 = temp_report.indexOf("WHITE FEMALE");	
+				if (r1 > 0 || r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r6 > 0){
+					race_consistency = "Check racial consistency";
+				}
+			break;
+		}	
+	
+	}
+	
+	var age_list = getMatches("YEARS", temp_report);
+	var age1;
+		for (i = 0; i < age_list.length; i++){
+			age1 = report.substr(age_list[i] - 4, 4);
+			age1 = age1.replace(/\s+/g, '');
+			age_match = age1.match(/\d+/)[0];
+			
+			if (age1 != age){				
+				age_consistency = "Check age consistency";
+			}
+		}
+	
+	$gender_append = $("p").append("<b>" + gender_consistency + "</b><br/>");
+	$race_append = $("p").append("<b>" + race_consistency + "</b><br/>");
+	$age_append = $("p").append("<b>" + age_consistency + "</b><br/>");
+	
+	
+}
+
+function getMatches(needle, haystack) {
+    var myRe = new RegExp("\\b" + needle + "\\b((?!\\W(?=\\w))|(?=\\s))", "gi"),
+        myArray, myResult = [];
+    while ((myArray = myRe.exec(haystack)) !== null) {
+        myResult.push(myArray.index);
+    }
+    return myResult;
+}
