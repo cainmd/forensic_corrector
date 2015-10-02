@@ -21,6 +21,7 @@ var $ = window.jQuery;
 var organ_error = "";
 var gender_error = "";
 var death_error = "";
+var name;
 var age;
 var sex;
 var race;
@@ -48,7 +49,7 @@ $(document).ready(function () {
 	
 		 interpret_report(report_text);
 		 organ_search(report_text);
-		 
+		 check_name(report_text);
          //alert (sex);
 		for (i = 0; i < checkedValues.length; i++){
 			switch (checkedValues[i]) {
@@ -74,9 +75,6 @@ var reset_messages = function () {
 	$('p').remove();
 	$('#results').append('<p></p>');
 	
-	//$('p').html('');
-	//$organ_append = "";
-	//$gender_append = "";
 }
 
 
@@ -85,7 +83,7 @@ var organ_search = function (report) {
 	var temp = report.toUpperCase();
 	//need liver and pancreas already show up in heading
 	var headings = ["Cardiovascular System", "Respiratory System", "Liver and Pancreas", "Lymphoid System", "Endocrine System", "Gastrointestinal Tract", "Genitourinary System", "Musculoskeletal System", "Neck Organs", "Head and Central Nervous System"];
-	var organs = ["Heart", "Lung", "Liver", "Spleen", "Stomach", "Pancreas", "Thyroid", "Kidney", "Bladder", "Prostate", "Brain", "Ovary", "Uterus"];
+	var organs = ["Heart", "Lung", "Liver", "Spleen", "Stomach", "Pancreas", "Thyroid", "Adrenal", "Kidney", "Bladder", "Prostate", "Brain", "Ovary", "Uterus", "Uterine"];
 	
 	var current_organ = "";
 	var start = 0;
@@ -119,7 +117,7 @@ var organ_search = function (report) {
 				
 				
 				if (organ_site <= 0){
-					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS"){
+					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS" || current_organ == "UTERINE"){
 						//if it didn't find the organ and they are male, this is okay.
 						if (sex == "Male"){
 								counter++;
@@ -137,7 +135,7 @@ var organ_search = function (report) {
 				//fix this if ovaries vs ovary ---
 				if (organ_site > 0) {
 					counter++;
-					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS"){
+					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS" || current_organ == "UTERINE"){
 						if (sex == "Male"){
 							//gender id
 							gender_error = "This man grew a pair...of ovaries!";
@@ -163,6 +161,26 @@ var organ_search = function (report) {
 	$organ_append = $("p").append("<b>" + organ_error + "</b><br/>");
 	$gender_append = $("p").append("<b>" + gender_error + "</b><br/>");
 	check_demographics(report, sex, race);
+}
+
+var check_name = function(report) {
+	
+	var extracted_value = "";
+	var start = 0;
+	var end = 0;
+	var temp_report = report.toUpperCase();
+	
+	start = report.indexOf("NAME:");
+	//at start
+	end = report.indexOf("\r", start);
+	if (end <= 0){
+		end = report.indexOf("\n", start);
+	}
+	
+	extracted_value = report.substr(start + 5, end);	
+	//alert (end);
+	
+	
 }
 
 var interpret_report = function (report) {
@@ -331,8 +349,25 @@ var check_demographics = function (report, sex, race) {
 	
 	}
 	
-	var age_list = getMatches("YEARS", temp_report);
-	var age1;
+	
+	
+	
+	
+	var age_list = [];
+	//var index = word.indexOf(guess);
+	
+	var index = temp_report.indexOf("YEAR");
+	
+	while (index >= 0) {
+		age_list.push(index);
+		index = temp_report.indexOf("YEAR", index + 1);
+	}
+	
+	 
+
+	
+	
+		
 		for (i = 0; i < age_list.length; i++){
 			age1 = report.substr(age_list[i] - 4, 4);
 			age1 = age1.replace(/\s+/g, '');
@@ -342,7 +377,9 @@ var check_demographics = function (report, sex, race) {
 				age_consistency = "Check age consistency";
 			}
 		}
-	
+		
+	alert (age + " " + age_list[1]);
+	//alert (age_list [1]);
 	$gender_append = $("p").append("<b>" + gender_consistency + "</b><br/>");
 	$race_append = $("p").append("<b>" + race_consistency + "</b><br/>");
 	$age_append = $("p").append("<b>" + age_consistency + "</b><br/>");
