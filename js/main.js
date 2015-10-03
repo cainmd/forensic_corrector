@@ -138,7 +138,7 @@ var organ_search = function (report) {
 					if (current_organ == "OVARY" || current_organ == "OVARIES" || current_organ == "UTERUS" || current_organ == "UTERINE"){
 						if (sex == "Male"){
 							//gender id
-							gender_error = "This man grew a pair...of ovaries!";
+							gender_error = "Potential error: Your report indicates this man has female anatomy...";
 						}
 						else {
 							female_parts = 1;
@@ -148,7 +148,7 @@ var organ_search = function (report) {
 					else if (current_organ == "PROSTATE"){
 						if (sex == "Female"){
 							//gender id
-							gender_error = "Alas, this lady's husband was devastated to find she had a prostate!";
+							gender_error = "Potential error: Your report indicates this female has male anatomy.";
 						}
 					}	
 				}
