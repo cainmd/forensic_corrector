@@ -50,7 +50,7 @@ $(document).ready(function () {
 		 interpret_report(report_text);
 		 organ_search(report_text);
 		 check_name(report_text);
-         //alert (sex);
+         
 		for (i = 0; i < checkedValues.length; i++){
 			switch (checkedValues[i]) {
 				case "GSW":
@@ -178,7 +178,7 @@ var check_name = function(report) {
 	}
 	
 	extracted_value = report.substr(start + 5, end);	
-	//alert (end);
+
 	
 	
 }
@@ -217,9 +217,7 @@ var interpret_report = function (report) {
 	extracted_value = report.substr(start + 17, 5);	
 	mod = extracted_value.replace(/\s+/g, '');
 	
-	//alert (sex);
-	//alert (age);
-//	alert (race);
+	
 }  
 
 var check_demographics = function (report, sex, race) {
@@ -378,7 +376,7 @@ var check_demographics = function (report, sex, race) {
 			}
 		}
 		
-	alert (age + " " + age_list[1]);
+	//alert (age + " " + age_list[1]);
 	//alert (age_list [1]);
 	$gender_append = $("p").append("<b>" + gender_consistency + "</b><br/>");
 	$race_append = $("p").append("<b>" + race_consistency + "</b><br/>");
