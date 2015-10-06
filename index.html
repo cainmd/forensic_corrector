@@ -6,7 +6,8 @@
         <title>FPCorrector</title>
        <!-- <link rel="stylesheet" type="text/css" href="css/layout.css"> -->
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-		
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     </head>
 
@@ -16,9 +17,79 @@
 <div class="container">        
  <div class = "jumbotron">
  <h1>
-    Welcome to the Forensic Autopsy Report Corrector
+    Welcome to the Forensic Autopsy Report Error Catcher
   </h1>
  </div>
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+
+		$('#instructions').click( function() { $("#instruction_modal").modal('show'); return false; } );		
+		$('#about').click( function() { $("#about_modal").modal('show'); return false; } );		
+		$('#other').click( function() { $("#otherworks_modal").modal('show'); return false; } );		
+	
+	
+	});
+
+</script>
+  <div id="instruction_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Instructions for use.</h4>
+            </div>
+            <div class="modal-body">
+                <ul>
+				<li>Depending on the case scenario, you may want to click on one of the search modules (i.e. gunshot).</li>
+                <li>Simply copy-paste the report into the text field and click submit.  Errors will be displayed below.</li>
+				</ul>
+				<p class="text-warning">You may need to modify <a href="https://github.com/cainmd/forensic_corrector/tree/gh-pages"> our code </a> on GitHub for your report to work properly.  You will need a GitHub account to submit a pull request and "Fork" the webpage. Our cases have the following first page:</p>
+				<img src="example_image.jpg" width = "auto">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+ 
+ <div id="about_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">About the authors:</h4>
+            </div>
+            <div class="modal-body">
+                <p>Matthew D. Cain, M.D.</p>
+                <ul>
+					<li>Dr. Cain is currently a Forensic Pathology Fellow at the University of Alabama at Birmingham.  He has an interest in combining the tools of Informatics to the field of Forensic.
+				</ul><br>
+				<p>Daniel W. Dye, M.D.</p>
+				<ul>
+					<li>Dr. Dye is currently an Associate Medical Examiner and Forensic Fellowship Director at the University of Alabama at Birmingham.
+				</ul><br>
+				
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<nav class="navbar navbar-inverse">
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">       
+        <li id = 'instructions'><a href="#">Instructions</a></li>
+        <li id = 'about'><a href="#">About</a></li>
+        <li id = 'other'><a href="#">Other works</a></li>
+	   </ul> 
+</div></nav>	  
  
 <form role = "form">			
 				<h2>Select items to review below: </h2>	
@@ -51,10 +122,32 @@
 
 </br>
 
-
+ 
+ <div id="otherworks_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Other works with open access:</h4>
+            </div>
+            <div class="modal-body">
+                <ol>
+					<li><a href="http://cainmd.github.io/anthropometryData/">Anthropometry Webpage and Database</li>
+					<li><a href="http://cainmd.github.io/anthropometry_revised/">Revised Anthropometry Webpage - under construction but includes placenta weights</li>
+					<li><a href="http://etox.path.uab.edu/">Etox - Toxicology Database</li>
+					<li>Report Creator - coming soon</li>
+				
+				<ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
 
 <input type="button" value="Submit" id ="submit" >
-
 <div id="results">
 
 </div>
