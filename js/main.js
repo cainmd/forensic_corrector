@@ -193,8 +193,8 @@ var interpret_report = function (report) {
 	//at start
 	extracted_value = report.substr(start + 5, 3);	
 	age = extracted_value.replace(/\s+/g, '');
-	alert (age);
-	//age = age.match(/\d+/)[0];
+	
+	age = age.match(/\d+/)[0];
 	start = report.indexOf("SEX");
 		end_pt = report.indexOf("HEIGHT");
 	//at start
