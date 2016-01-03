@@ -92,7 +92,10 @@ var organ_search = function (report) {
 	
 	var counter = 0;
 	var female_parts = 0;
-		
+		var ovary_found = 0;
+		var uterus_found = 0;
+	var organs_missed = [];
+	
 		for (i = 0; i < organs.length; i++){
 			counter = 0;
 			for (j = 0; j < headings.length; j++){		
@@ -107,6 +110,9 @@ var organ_search = function (report) {
 				
 				temp_string = temp.substr(start + current_heading.length);
 				organ_site = temp_string.indexOf(current_organ);
+				
+				//organ_site is where it was found in the text
+				
 				if (current_organ == "OVARY"){
 					if (organ_site <=0){
 						temp_string = temp.substr(start + current_heading.length);
@@ -153,11 +159,23 @@ var organ_search = function (report) {
 					}	
 				}
 			}
+			
 			//was <=
 				if (counter <= 0) {
-						organ_error = organ_error + "<br/>\n\u2022" + organs[i];
+						organs_missed.push(organs[i]);
+						//organ_error = organ_error + "<br/>\n\u2022" + organs[i];
+					
 					}
-		}	
+		}
+	if (uterus_found == 1){
+		var index = organs_missed("Uterine");
+		organs_missed.splice(index, 1);
+	}
+
+		for (var i = 0; i < organs_missed.length - 1; i++){
+			organ_error = organ_error + "<br/>\n\u2022" + organs_missed[i];
+		}
+	
 	$organ_append = $("p").append("<b>" + organ_error + "</b><br/>");
 	$gender_append = $("p").append("<b>" + gender_error + "</b><br/>");
 	check_demographics(report, sex, race);
@@ -193,7 +211,6 @@ var interpret_report = function (report) {
 	//at start
 	extracted_value = report.substr(start + 5, 3);	
 	age = extracted_value.replace(/\s+/g, '');
-	
 	age = age.match(/\d+/)[0];
 	start = report.indexOf("SEX");
 		end_pt = report.indexOf("HEIGHT");
